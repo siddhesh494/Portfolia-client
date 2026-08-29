@@ -57,23 +57,24 @@ export default function PortfolioModal({
       />
 
       <div
-        className="relative w-full max-w-md animate-fade-up rounded-2xl border border-white/70 bg-foam/95 p-7 shadow-[0_24px_60px_-28px_rgba(15,28,26,0.45)]"
+        className="relative w-full max-w-md animate-fade-up rounded-[1.75rem] border border-white/80 bg-foam/95 p-8 shadow-[0_24px_60px_-28px_rgba(26,46,42,0.35)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="portfolio-modal-title"
       >
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-leaf">
-          Portfolia
-        </p>
+        <p className="font-accent mb-1 text-2xl text-leaf">Portfolia ✦</p>
         <h1
           id="portfolio-modal-title"
-          className="font-display text-3xl leading-tight text-ink sm:text-[2rem]"
+          className="font-display text-3xl font-semibold leading-tight text-ink"
         >
           Build Your AI Assistant
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-ink-soft/80">
+        <p className="mt-3 text-sm font-medium leading-relaxed text-ink-soft/85">
           Enter your portfolio URL. We&apos;ll crawl it and create a chat assistant
           grounded only in your site.
+        </p>
+        <p className="mt-3 rounded-xl bg-leaf/5 px-3 py-2 text-xs font-medium leading-relaxed text-ink-soft/75">
+          MVP preview — embed on your portfolio coming soon. Try the demo for now!
         </p>
 
         {isIndexing ? (
@@ -96,7 +97,7 @@ export default function PortfolioModal({
                   if (indexError) onClearError?.()
                 }}
                 disabled={isIndexing}
-                className="w-full rounded-xl border border-mist bg-white px-3.5 py-3 text-sm text-ink outline-none transition placeholder:text-ink-soft/40 focus:border-leaf focus:ring-2 focus:ring-leaf/20 disabled:opacity-60"
+                className="w-full rounded-2xl border-2 border-mist bg-white px-4 py-3.5 text-sm font-medium text-ink outline-none transition placeholder:text-ink-soft/40 focus:border-leaf focus:ring-2 focus:ring-leaf/20 disabled:opacity-60"
               />
             </label>
 
@@ -109,7 +110,7 @@ export default function PortfolioModal({
             <button
               type="submit"
               disabled={isIndexing}
-              className="w-full rounded-xl bg-leaf px-4 py-3 text-sm font-semibold text-white transition hover:bg-leaf-deep disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn-fun w-full rounded-full bg-leaf px-4 py-3.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               Create Assistant
             </button>

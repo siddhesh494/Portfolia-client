@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import ChatMessage from './ChatMessage'
 import { askQuestion } from '../services/api'
 
@@ -71,22 +72,33 @@ export default function ChatWindow({ uuid, onReset }) {
     <div className="flex h-[100dvh] w-full flex-col">
       <header className="flex items-center justify-between border-b border-mist/80 bg-foam/80 px-4 py-3 backdrop-blur-md sm:px-6">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-leaf">
-            Portfolia
-          </p>
-          <h1 className="font-display text-xl text-ink sm:text-2xl">
+          <Link
+            to="/"
+            className="font-accent text-xl text-leaf transition hover:text-leaf-deep"
+          >
+            Portfolia ✦
+          </Link>
+          <h1 className="font-display text-xl font-semibold text-ink sm:text-2xl">
             Portfolio AI Assistant
           </h1>
         </div>
-        {onReset ? (
-          <button
-            type="button"
-            onClick={onReset}
-            className="rounded-lg border border-mist bg-white px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-leaf/40 hover:text-leaf-deep"
+        <div className="flex items-center gap-2">
+          <Link
+            to="/"
+            className="hidden rounded-lg border border-mist bg-white px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-leaf/40 hover:text-leaf-deep sm:inline-flex"
           >
-            New portfolio
-          </button>
-        ) : null}
+            Home
+          </Link>
+          {onReset ? (
+            <button
+              type="button"
+              onClick={onReset}
+              className="rounded-lg border border-mist bg-white px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-leaf/40 hover:text-leaf-deep"
+            >
+              New portfolio
+            </button>
+          ) : null}
+        </div>
       </header>
 
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col overflow-hidden px-3 sm:px-4">
@@ -128,7 +140,7 @@ export default function ChatWindow({ uuid, onReset }) {
               type="button"
               onClick={sendMessage}
               disabled={isSending || !input.trim()}
-              className="mb-0.5 rounded-xl bg-leaf px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-leaf-deep disabled:cursor-not-allowed disabled:opacity-50"
+              className="btn-fun mb-0.5 rounded-full bg-leaf px-5 py-2.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               Send
             </button>

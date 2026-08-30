@@ -20,6 +20,12 @@ export default function ChatWindow({ uuid, onReset }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isSending])
 
+  useEffect(() => {
+    if (!isSending) {
+      textareaRef.current?.focus()
+    }
+  }, [isSending])
+
   const sendMessage = async () => {
     const question = input.trim()
     if (!question || isSending || !uuid) return
@@ -57,7 +63,6 @@ export default function ChatWindow({ uuid, onReset }) {
       ])
     } finally {
       setIsSending(false)
-      textareaRef.current?.focus()
     }
   }
 

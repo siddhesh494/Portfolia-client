@@ -1,6 +1,6 @@
-# Client — Portfolio AI Assistant
+# Client — Business AI Assistant
 
-React + Tailwind UI for indexing a portfolio and chatting with the grounded assistant.
+React + Tailwind UI for uploading a business document and chatting with a grounded assistant.
 
 ## Setup
 
@@ -33,10 +33,11 @@ npm run preview
 
 ## UX flow
 
-1. Modal asks for portfolio URL on first visit (or when no UUID in `sessionStorage`).
-2. Submit → loading state while `POST /api/index` runs.
-3. On success, UUID is stored in React state + `sessionStorage`, modal closes, chat opens.
-4. Questions go to `POST /api/chat` with the stored UUID.
+1. `/try` asks for a business document (.txt / .doc / .docx).
+2. Submit → loading state while `POST /api/index` runs (multipart upload).
+3. On success, the app navigates to `/try/{uuid}` so the link can be shared.
+4. Opening `/try/{uuid}` checks `GET /api/portfolio/{uuid}`. If the namespace was removed from Pinecone, an expired-assistant message is shown.
+5. Questions go to `POST /api/chat` with the business UUID from the URL and a per-tab visitor `thread_id` for short-term conversation memory.
 
 ## Structure
 
@@ -49,6 +50,9 @@ src/
 │   └── LoadingState.jsx
 ├── hooks/
 │   └── usePortfolio.js
+├── pages/
+│   ├── LandingPage.jsx
+│   └── TryItOutPage.jsx
 ├── services/
 │   └── api.js
 ├── App.jsx

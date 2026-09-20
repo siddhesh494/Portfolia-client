@@ -4,21 +4,21 @@ import Navbar from '../components/Navbar'
 
 const features = [
   {
-    title: 'Drop in a URL',
+    title: 'Upload a document',
     description:
-      'Paste your portfolio link. We crawl your site, extract the content, and build a knowledge base in minutes.',
-    icon: '🔗',
+      'Drop in a .txt, .doc, or .docx file with your services, packages, rates, and FAQs. We extract the text and build a knowledge base in minutes.',
+    icon: '📄',
   },
   {
-    title: 'Answers from your site only',
+    title: 'Answers from your content only',
     description:
-      'Visitors ask questions and get grounded replies — pulled strictly from your portfolio, not the open web.',
+      'Customers ask about bookings, services, or eligibility and get grounded replies — pulled strictly from your document, not the open web.',
     icon: '🎯',
   },
   {
     title: 'Always on',
     description:
-      'Your AI assistant works 24/7 so you can focus on building while it handles the repetitive “tell me about you” questions.',
+      'Your AI assistant works 24/7 so you can focus on the business while it handles repetitive “what do you offer?” questions.',
     icon: '⚡',
   },
 ]
@@ -47,7 +47,7 @@ export default function LandingPage() {
           <div className="animate-fade-up mb-5 flex flex-wrap items-center gap-3">
             <p className="inline-flex items-center gap-2 rounded-full border border-leaf/25 bg-white/80 px-4 py-1.5 text-sm font-bold text-leaf shadow-sm">
               <span className="inline-block h-2 w-2 animate-pulse-soft rounded-full bg-leaf" />
-              Portfolio AI for solo entrepreneurs
+              AI chat for local businesses
             </p>
             <p className="inline-flex items-center gap-2 rounded-full border border-coral/25 bg-coral/10 px-4 py-1.5 text-sm font-bold text-coral shadow-sm">
               🧪 MVP — early preview
@@ -59,14 +59,14 @@ export default function LandingPage() {
             <span className="font-accent text-[3rem] font-bold text-leaf sm:text-[4.2rem]">
               easiest
             </span>{' '}
-            way to add AI to your portfolio
+            way to add AI to your business
           </h1>
 
           <p className="animate-fade-up stagger-2 mt-7 max-w-2xl text-lg font-medium leading-relaxed text-ink-soft sm:text-xl">
-            Portfolia turns your personal site into a friendly chat experience.
-            Let visitors ask about your work, skills, and projects — and get
-            instant answers sourced only from <em className="text-leaf">your</em>{' '}
-            content.
+            Portfolia gives interiors, builders, small finance offices, banquet
+            halls, and similar businesses a friendly chat assistant. Customers
+            ask about services, packages, and bookings — and get instant answers
+            sourced only from <em className="text-leaf">your</em> document.
           </p>
 
           <div className="animate-fade-up stagger-3 mt-11 flex flex-wrap items-center gap-4">
@@ -92,8 +92,8 @@ export default function LandingPage() {
               This is our MVP — try the demo today.
             </p>
             <p className="mt-1.5 text-sm font-medium leading-relaxed text-ink-soft">
-              Full integration into your own portfolio is coming soon. For now,
-              paste any URL and experience how Portfolia works.
+              Full integration into your own website is coming soon. For now,
+              upload a business document and experience how Portfolia works.
             </p>
           </div>
         </div>
@@ -106,24 +106,24 @@ export default function LandingPage() {
             <AnimateOnScroll>
               <p className="font-accent text-2xl text-leaf">What is Portfolia?</p>
               <h2 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-[2.6rem] sm:leading-tight">
-                Your portfolio, now with a brain 🧠
+                Your business, now with a 24/7 front desk 🧠
               </h2>
               <p className="mt-6 text-base font-medium leading-relaxed text-ink-soft">
-                Portfolia is a lightweight AI layer for personal portfolios and
-                solo-founder sites. Instead of making visitors hunt through pages,
-                you give them a conversational interface that understands your
-                work.
+                Portfolia is a lightweight AI layer for local businesses.
+                Instead of making customers hunt through a brochure or wait for
+                a callback, you give them a conversational assistant that
+                understands your services.
               </p>
               <p className="mt-4 text-base font-medium leading-relaxed text-ink-soft">
-                It&apos;s the <strong className="text-ink">easiest way to integrate AI</strong>{' '}
-                into your portfolio — no complex setup, no generic chatbot that
-                hallucinates. Just your site, indexed once, answering questions
-                on your behalf.
+                It&apos;s the <strong className="text-ink">easiest way to add AI</strong>{' '}
+                to your business — no complex setup, no generic chatbot that
+                invents prices. Just your document, indexed once, answering
+                questions on your behalf.
               </p>
               <p className="mt-4 rounded-2xl border border-leaf/20 bg-leaf/5 px-4 py-3 text-sm font-medium leading-relaxed text-ink-soft">
                 <strong className="text-leaf-deep">MVP note:</strong> you can try
                 the full experience right now. Embedding Portfolia directly on
-                your portfolio site is on the roadmap — stay tuned!
+                your website is on the roadmap — stay tuned!
               </p>
             </AnimateOnScroll>
 
@@ -132,10 +132,10 @@ export default function LandingPage() {
                 <p className="font-accent text-2xl text-leaf">Perfect for</p>
                 <ul className="mt-5 space-y-4 font-medium text-ink-soft">
                   {[
-                    'Developers & designers showcasing projects',
-                    'Freelancers tired of repeating the same intro calls',
-                    'Solo entrepreneurs who want a polished, interactive portfolio',
-                    'Anyone who wants AI that answers questions for them',
+                    'Interior designers explaining packages and materials',
+                    'Builders answering project and site FAQs',
+                    'Small finance offices covering eligibility and process',
+                    'Banquet halls sharing menus, capacity, and booking info',
                   ].map((item) => (
                     <li key={item} className="flex gap-3">
                       <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-leaf/15 text-sm text-leaf">
@@ -157,7 +157,7 @@ export default function LandingPage() {
           <AnimateOnScroll className="text-center">
             <p className="font-accent text-2xl text-leaf">How it works</p>
             <h2 className="mt-2 font-display text-3xl font-semibold text-ink sm:text-[2.6rem]">
-              Three steps to your own portfolio AI
+              Three steps to your own business AI
             </h2>
           </AnimateOnScroll>
 
@@ -191,14 +191,14 @@ export default function LandingPage() {
             <div className="relative z-10 max-w-2xl">
               <p className="font-accent text-3xl text-white/90">Try it out</p>
               <h2 className="mt-2 font-display text-3xl font-semibold sm:text-[2.5rem] sm:leading-tight">
-                See it in action with your portfolio
+                See it in action with your business
               </h2>
               <p className="mt-5 text-base font-medium leading-relaxed text-white/90">
-                Enter any portfolio URL, wait while we index it, then chat with an
-                AI that only knows what&apos;s on that site. No signup required.
+                Upload a .txt, .doc, or .docx file, wait while we index it, then chat
+                with an AI that only knows what&apos;s in that document. No signup required.
               </p>
               <p className="mt-3 text-sm font-medium text-white/75">
-                This MVP lets you test the magic — portfolio integration drops soon.
+                This MVP lets you test the magic — website integration drops soon.
               </p>
               <Link
                 to="/try"
@@ -223,13 +223,13 @@ export default function LandingPage() {
           <div className="mt-10 rounded-3xl border-2 border-dashed border-mist bg-foam/80 px-8 py-20">
             <span className="inline-block text-4xl animate-float">🚧</span>
             <p className="mt-4 text-base font-bold text-ink-soft/70">
-              Integration into your portfolio — coming soon
+              Integration into your website — coming soon
             </p>
             <p className="mt-2 text-sm font-medium leading-relaxed text-ink-soft/55">
               We&apos;re building drop-in widgets, embed codes, and API docs so
               you can add Portfolia to your own site. This MVP is a live preview —
               for now, head to <strong className="text-ink-soft/70">Try out</strong> and
-              test it with any portfolio URL.
+              test it with a services, FAQ, or brochure document.
             </p>
           </div>
         </AnimateOnScroll>
@@ -247,7 +247,7 @@ export default function LandingPage() {
                     Let&apos;s build something together
                   </h2>
                   <p className="mt-5 text-sm font-medium leading-relaxed text-ink-soft">
-                    Questions, feedback, or want Portfolia on your portfolio?
+                    Questions, feedback, or want Portfolia for your business?
                     Reach out — I&apos;d love to hear from you.
                   </p>
                 </div>
@@ -303,7 +303,7 @@ export default function LandingPage() {
           </p>
           <div className="text-center sm:text-right">
             <p className="text-sm font-medium text-ink-soft/55">
-              MVP preview · Portfolio integration coming soon
+              MVP preview · Website integration coming soon
             </p>
             <p className="mt-1 text-sm font-medium text-ink-soft/55">
               Built by{' '}

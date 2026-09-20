@@ -1,20 +1,61 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ChatMessage from './ChatMessage'
 import { askQuestion } from '../services/api'
 
-export default function ChatWindow({ uuid, onReset }) {
-  const [messages, setMessages] = useState([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: 'Hi! Ask me anything about this portfolio.',
-    },
-  ])
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+const WELCOME_MESSAGE = {
+  id: 'welcome',
+  role: 'assistant',
+  content: 'Hi! Ask me anything about this business.',
+}
+
+function visitorThreadKey(businessUuid) {
+  return `portfolia_thread_${businessUuid}`
+}
+
+function getVisitorThreadId(businessUuid) {
+  const key = visitorThreadKey(businessUuid)
+  try {
+    const existing = sessionStorage.getItem(key)
+    if (existing && UUID_PATTERN.test(existing)) {
+      return existing
+    }
+    const next = crypto.randomUUID()
+    sessionStorage.setItem(key, next)
+    return next
+  } catch {
+    return crypto.randomUUID()
+  }
+}
+
+function clearVisitorThreadId(businessUuid) {
+  if (!businessUuid) return
+  try {
+    sessionStorage.removeItem(visitorThreadKey(businessUuid))
+  } catch {
+    // sessionStorage may be unavailable
+  }
+}
+
+export default function ChatWindow({ uuid, onReset, onExpired }) {
+  const [messages, setMessages] = useState([WELCOME_MESSAGE])
   const [input, setInput] = useState('')
   const [isSending, setIsSending] = useState(false)
+  const [copied, setCopied] = useState(false)
   const bottomRef = useRef(null)
   const textareaRef = useRef(null)
+  const threadId = useMemo(
+    () => (uuid ? getVisitorThreadId(uuid) : ''),
+    [uuid],
+  )
+
+  useEffect(() => {
+    setMessages([WELCOME_MESSAGE])
+    setInput('')
+  }, [uuid])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -26,9 +67,19 @@ export default function ChatWindow({ uuid, onReset }) {
     }
   }, [isSending])
 
+  const copyShareLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      setCopied(false)
+    }
+  }
+
   const sendMessage = async () => {
     const question = input.trim()
-    if (!question || isSending || !uuid) return
+    if (!question || isSending || !uuid || !threadId) return
 
     const userMessage = {
       id: `u-${Date.now()}`,
@@ -41,16 +92,20 @@ export default function ChatWindow({ uuid, onReset }) {
     setIsSending(true)
 
     try {
-      const data = await askQuestion(uuid, question)
+      const data = await askQuestion(uuid, threadId, question)
       setMessages((prev) => [
         ...prev,
         {
           id: `a-${Date.now()}`,
           role: 'assistant',
-          content: data.answer || "I couldn't find that information in the portfolio.",
+          content: data.answer || "I couldn't find that information in our business details.",
         },
       ])
     } catch (error) {
+      if (error?.status === 404) {
+        onExpired?.()
+        return
+      }
       setMessages((prev) => [
         ...prev,
         {
@@ -73,6 +128,11 @@ export default function ChatWindow({ uuid, onReset }) {
     }
   }
 
+  const handleReset = () => {
+    clearVisitorThreadId(uuid)
+    onReset?.()
+  }
+
   return (
     <div className="flex h-[100dvh] w-full flex-col">
       <header className="flex items-center justify-between border-b border-mist/80 bg-foam/80 px-4 py-3 backdrop-blur-md sm:px-6">
@@ -84,7 +144,7 @@ export default function ChatWindow({ uuid, onReset }) {
             Portfolia ✦
           </Link>
           <h1 className="font-display text-xl font-semibold text-ink sm:text-2xl">
-            Portfolio AI Assistant
+            Business AI Assistant
           </h1>
         </div>
         <div className="flex items-center gap-2">
@@ -97,12 +157,19 @@ export default function ChatWindow({ uuid, onReset }) {
           {onReset ? (
             <button
               type="button"
-              onClick={onReset}
+              onClick={handleReset}
               className="rounded-lg border border-mist bg-white px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-leaf/40 hover:text-leaf-deep"
             >
-              New portfolio
+              New document
             </button>
           ) : null}
+          <button
+            type="button"
+            onClick={copyShareLink}
+            className="rounded-lg border border-mist bg-white px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-leaf/40 hover:text-leaf-deep"
+          >
+            {copied ? 'Link copied' : 'Copy link'}
+          </button>
         </div>
       </header>
 

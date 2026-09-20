@@ -1,13 +1,18 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import LoadingState from './LoadingState'
 
-function isValidHttpUrl(value) {
-  try {
-    const parsed = new URL(value)
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
-  } catch {
-    return false
-  }
+const ALLOWED_EXTENSIONS = ['.txt', '.doc', '.docx']
+const MAX_FILE_SIZE_MB = 5
+
+function getExtension(filename) {
+  const match = filename.toLowerCase().match(/\.[^.]+$/)
+  return match ? match[0] : ''
+}
+
+function formatBytes(size) {
+  if (size < 1024) return `${size} B`
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`
 }
 
 export default function PortfolioModal({
@@ -18,11 +23,40 @@ export default function PortfolioModal({
   onSubmit,
   onClearError,
 }) {
-  const [url, setUrl] = useState('')
+  const [file, setFile] = useState(null)
   const [localError, setLocalError] = useState('')
+  const [isDragging, setIsDragging] = useState(false)
+  const inputRef = useRef(null)
 
   if (!open) {
     return null
+  }
+
+  const validateAndSetFile = (nextFile) => {
+    if (!nextFile) return
+
+    const extension = getExtension(nextFile.name)
+    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+      setLocalError('Please upload a .txt, .doc, or .docx file.')
+      setFile(null)
+      return
+    }
+
+    if (nextFile.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setLocalError(`File is too large. Maximum size is ${MAX_FILE_SIZE_MB} MB.`)
+      setFile(null)
+      return
+    }
+
+    if (nextFile.size === 0) {
+      setLocalError('Uploaded file is empty.')
+      setFile(null)
+      return
+    }
+
+    setLocalError('')
+    onClearError?.()
+    setFile(nextFile)
   }
 
   const handleSubmit = async (event) => {
@@ -32,19 +66,12 @@ export default function PortfolioModal({
     onClearError?.()
     setLocalError('')
 
-    const trimmed = url.trim()
-    if (!trimmed) {
-      setLocalError('Please enter a portfolio URL.')
+    if (!file) {
+      setLocalError('Please choose a .txt, .doc, or .docx file.')
       return
     }
 
-    const normalized = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
-    if (!isValidHttpUrl(normalized)) {
-      setLocalError('Enter a valid http:// or https:// URL.')
-      return
-    }
-
-    await onSubmit(normalized)
+    await onSubmit(file)
   }
 
   const error = localError || indexError
@@ -70,36 +97,89 @@ export default function PortfolioModal({
           Build Your AI Assistant
         </h1>
         <p className="mt-3 text-sm font-medium leading-relaxed text-ink-soft/85">
-          Enter your portfolio URL. We&apos;ll crawl it and create a chat assistant
-          grounded only in your site.
+          Upload a business document (.txt, .doc, or .docx) — services, packages,
+          rates, or FAQs. We&apos;ll index the text and create a chat assistant
+          grounded only in that content.
         </p>
         <p className="mt-3 rounded-xl bg-leaf/5 px-3 py-2 text-xs font-medium leading-relaxed text-ink-soft/75">
-          MVP preview — embed on your portfolio coming soon. Try the demo for now!
+          Built for interiors, builders, small finance, banquet halls, and similar businesses. MVP preview — website embed coming soon.
         </p>
 
         {isIndexing ? (
           <LoadingState step={indexStep} />
         ) : (
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-            <label className="block">
+            <div>
               <span className="mb-1.5 block text-sm font-medium text-ink-soft">
-                Portfolio URL
+                Business document
               </span>
+
               <input
-                type="url"
-                inputMode="url"
-                autoComplete="url"
-                placeholder="https://yourportfolio.com"
-                value={url}
-                onChange={(e) => {
-                  setUrl(e.target.value)
-                  if (localError) setLocalError('')
-                  if (indexError) onClearError?.()
-                }}
+                ref={inputRef}
+                type="file"
+                accept=".txt,.doc,.docx,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                className="hidden"
                 disabled={isIndexing}
-                className="w-full rounded-2xl border-2 border-mist bg-white px-4 py-3.5 text-sm font-medium text-ink outline-none transition placeholder:text-ink-soft/40 focus:border-leaf focus:ring-2 focus:ring-leaf/20 disabled:opacity-60"
+                onChange={(e) => {
+                  const next = e.target.files?.[0] || null
+                  validateAndSetFile(next)
+                }}
               />
-            </label>
+
+              <button
+                type="button"
+                disabled={isIndexing}
+                onClick={() => inputRef.current?.click()}
+                onDragEnter={(e) => {
+                  e.preventDefault()
+                  setIsDragging(true)
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setIsDragging(true)
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault()
+                  setIsDragging(false)
+                }}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setIsDragging(false)
+                  const next = e.dataTransfer.files?.[0] || null
+                  validateAndSetFile(next)
+                }}
+                className={`w-full rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${
+                  isDragging
+                    ? 'border-leaf bg-leaf/10'
+                    : 'border-mist bg-white hover:border-leaf/40'
+                } disabled:opacity-60`}
+              >
+                <p className="text-2xl" aria-hidden="true">
+                  📄
+                </p>
+                <p className="mt-2 text-sm font-bold text-ink">
+                  {file ? file.name : 'Drop a file here or click to browse'}
+                </p>
+                <p className="mt-1 text-xs font-medium text-ink-soft/65">
+                  {file
+                    ? formatBytes(file.size)
+                    : `.txt, .doc, .docx · up to ${MAX_FILE_SIZE_MB} MB`}
+                </p>
+              </button>
+
+              {file ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFile(null)
+                    if (inputRef.current) inputRef.current.value = ''
+                  }}
+                  className="mt-2 text-xs font-bold text-ink-soft hover:text-coral"
+                >
+                  Remove file
+                </button>
+              ) : null}
+            </div>
 
             {error ? (
               <p className="rounded-lg bg-coral/10 px-3 py-2 text-sm text-coral" role="alert">
@@ -109,7 +189,7 @@ export default function PortfolioModal({
 
             <button
               type="submit"
-              disabled={isIndexing}
+              disabled={isIndexing || !file}
               className="btn-fun w-full rounded-full bg-leaf px-4 py-3.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               Create Assistant

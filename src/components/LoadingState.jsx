@@ -1,5 +1,5 @@
 const STEPS = [
-  'Crawling portfolio...',
+  'Reading your document...',
   'Extracting information...',
   'Creating embeddings...',
   'Building knowledge base...',

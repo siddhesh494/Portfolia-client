@@ -7,7 +7,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/try" element={<TryItOutPage />} />
+        <Route path="/try/:uuid?" element={<TryItOutPage />} />
       </Routes>
     </BrowserRouter>
   )
